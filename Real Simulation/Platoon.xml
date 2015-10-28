@@ -1,0 +1,42 @@
+<launch>
+    
+	<!-- A node to compute lateral and angular error of first follower-->
+    <node pkg="error" type="error_joy_node" name="follower_1_error"   >
+		<remap from="/error_joy" to="/error_1" />
+		<remap from="/turtlebotPose" to="/turtlebotPosef1" />
+    </node>
+
+    <!-- A node to control first follower -->
+    <node pkg="follower_control" type="follower_control_node" name="follower_1_control"  >
+		<remap from="/error" to="/error_1" />
+	    <remap from="/cmd_vel" to="     " />
+		<remap from="/sensor" to="/distance_1" />
+		
+     	<param name="Kp" type="double" value="23.0" />
+     	<param name="Kd" type="double" value="23.0" />
+	</node>
+	
+	<!-- A note that provides mimimum distance between range finder 1 data -->
+	<node pkg="follower_control" type="scanner_node" name="range1" >
+		<remap from="/laser_finder" to="/vrep/front_scan_1" />
+		<remap from="/distance" to="/distance_1" />
+	</node>
+	
+	
+	
+	<!-- A node that control the leader -->
+    <node pkg="leader_control" type="leader_control_node" name="leader_control_node"  >
+		 <remap from="/cmd_vel" to="     " />
+	</node>
+
+    <node pkg="capture_key" type="capture_key_node" name="capture_key_node">
+	</node>
+	
+    <node pkg="leader_control" type="velocity_node" name="velocity_node">
+		<remap from="/vel_keyobard" to="/leader_velocity" />
+	</node>
+
+
+
+
+</launch>
